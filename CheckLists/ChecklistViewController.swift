@@ -19,12 +19,13 @@ class ChecklistViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+    //覆盖Datasource protocol中的方法：方法返回tableview的总行数
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 100
     }
-    
+    //覆盖Datasource protocol中的方法：方法为索引指定的行返回一个cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //gets a copy of the prototype cell – either a new one or a recycled one – and puts it into the local constant
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
         
         let label = cell.viewWithTag(1000) as! UILabel
@@ -41,7 +42,7 @@ class ChecklistViewController: UITableViewController {
         }
         return cell
     }
-    
+    //覆盖UItableviewdelegate协议中的方法，gets called whenever the user taps on a cell.
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let cell = tableView.cellForRow(at: indexPath) {
