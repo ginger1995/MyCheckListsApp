@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController {
+class ChecklistViewController: UITableViewController ,AddItemViewControllerDelegate{
     
     var items :[ChecklistItem]
     
@@ -41,19 +41,6 @@ class ChecklistViewController: UITableViewController {
         items.append(row4item)
         
         super.init(coder: aDecoder)
-    }
-    //点击navigation controller上的“加号”时触发
-    @IBAction func addItem() {
-        let newRowIndex = items.count
-        
-        let item = ChecklistItem()
-        item.text = "I am a new row"
-        item.checked = true
-        items.append(item)
-        
-        let indexPath = IndexPath(row: newRowIndex, section: 0)
-        let indexPaths = [indexPath]
-        tableView.insertRows(at: indexPaths, with: .automatic)
     }
     
     override func viewDidLoad() {
@@ -97,6 +84,31 @@ class ChecklistViewController: UITableViewController {
         //2.delete the corresponding row from the table view
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
+    }
+    
+    //AddItemViewControllerDelegate 点击AddItem界面的navigationController的Cancel按钮的行为
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    //AddItemViewControllerDelegate 点击AddItem界面的navigationController的Done按钮的行为
+    func addItemViewController(_ controller: AddItemViewController, didFinishAdding item: ChecklistItem) {
+        let newRowIndex = items.count
+        items.append(item)
+        
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        
+        dismiss(animated: true, completion: nil)
+    }
+    //prepare-for-segue allows you to give data to the new view controller before it will be displayed.
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddItem" {
+            let navigationController = segue.destination as! UINavigationController
+            let controller = navigationController.topViewController as! AddItemViewController
+            //设置本viewcontroller为AddItemViewController的代理
+            controller.delegate = self
+        }
     }
     
     func configureCheckmark(for cell:UITableViewCell, with item:ChecklistItem) {
