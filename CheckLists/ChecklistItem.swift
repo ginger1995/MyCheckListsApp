@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ChecklistItem {
+class ChecklistItem: NSObject {//继承了NSObject使之成为equitable的object（可做==运算）
     var text = ""
     var checked = false
     

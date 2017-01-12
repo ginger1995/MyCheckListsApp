@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController ,AddItemViewControllerDelegate{
+class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDelegate{
     
     var items :[ChecklistItem]
     
@@ -86,12 +86,33 @@ class ChecklistViewController: UITableViewController ,AddItemViewControllerDeleg
         tableView.deleteRows(at: indexPaths, with: .automatic)
     }
     
-    //AddItemViewControllerDelegate 点击AddItem界面的navigationController的Cancel按钮的行为
-    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+    //prepare-for-segue allows you to give data to the new view controller before it will be displayed.(为页面跳转做准备)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddItem" {
+            let navigationController = segue.destination as! UINavigationController
+            //此时navigationController的最顶层显示的就是ItemDetailViewController
+            let controller = navigationController.topViewController as! ItemDetailViewController
+            //设置本viewcontroller为ItemDetailViewController的代理
+            controller.delegate = self
+        } else if segue.identifier == "EditItem" {
+            let navigationController = segue.destination as! UINavigationController
+            let controller = navigationController.topViewController as! ItemDetailViewController
+            
+            controller.delegate = self
+            
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+                //给ItemDetailViewController类的itemToEdit变量传值
+                controller.itemToEdit = items[indexPath.row]
+            }
+        }
+    }
+    
+    //ItemDetailViewControllerDelegate 点击AddItem界面的navigationController的Cancel按钮的行为
+    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         dismiss(animated: true, completion: nil)
     }
-    //AddItemViewControllerDelegate 点击AddItem界面的navigationController的Done按钮的行为
-    func addItemViewController(_ controller: AddItemViewController, didFinishAdding item: ChecklistItem) {
+    //ItemDetailViewControllerDelegate 点击AddItem界面的navigationController的Done按钮的行为(添加新的Item)
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem) {
         let newRowIndex = items.count
         items.append(item)
         
@@ -101,21 +122,24 @@ class ChecklistViewController: UITableViewController ,AddItemViewControllerDeleg
         
         dismiss(animated: true, completion: nil)
     }
-    //prepare-for-segue allows you to give data to the new view controller before it will be displayed.
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "AddItem" {
-            let navigationController = segue.destination as! UINavigationController
-            let controller = navigationController.topViewController as! AddItemViewController
-            //设置本viewcontroller为AddItemViewController的代理
-            controller.delegate = self
+    //ItemDetailViewControllerDelegate 点击AddItem界面的navigationController的Done按钮的行为(修改现有的Item)
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
+        if let index = items.index(of: item) {
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) {
+                configureText(for: cell, with: item)
+            }
         }
+        dismiss(animated: true, completion: nil)
     }
     
     func configureCheckmark(for cell:UITableViewCell, with item:ChecklistItem) {
+        let label = cell.viewWithTag(1001) as! UILabel
+        
         if item.checked {
-            cell.accessoryType = .checkmark
+            label.text = "√"
         } else {
-            cell.accessoryType = .none
+            label.text = ""
         }
     }
     
