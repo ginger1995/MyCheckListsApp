@@ -12,38 +12,25 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
     
     var items :[ChecklistItem]
     
+    //This initial method is for view controllers that are automatically loaded from a storyboard
     required init?(coder aDecoder: NSCoder) {
+        //make sure all instance variable items has a proper value
         items = [ChecklistItem]()
-        
-        let row0item = ChecklistItem()
-        row0item.text = "Walk the dog"
-        row0item.checked = false
-        items.append(row0item)
-        
-        let row1item = ChecklistItem()
-        row1item.text = "Brush my teeth"
-        row1item.checked = false
-        items.append(row1item)
-        
-        let row2item = ChecklistItem()
-        row2item.text = "Learn iOS development"
-        row2item.checked = false
-        items.append(row2item)
-        
-        let row3item = ChecklistItem()
-        row3item.text = "Soccer practice"
-        row3item.checked = false
-        items.append(row3item)
-        
-        let row4item = ChecklistItem()
-        row4item.text = "Eat ice cream"
-        row4item.checked = false
-        items.append(row4item)
         
         super.init(coder: aDecoder)
         
-        print("Documents folder is \(documentsDirectory())")
-        print("Data file path is \(dataFilePath())")
+        loadChecklistItems()
+    }
+    //do the work of loading the .plist file.
+    func loadChecklistItems() {
+        let path = dataFilePath()
+        //Try to load the contents of Checklists.plist into a new Data object.
+        if let data = try? Data(contentsOf :path) {
+            //create an NSKeyedUnarchiver object (note: this is an unarchiver) and ask it to decode that data into the items array. This populates the array with exact copies of the ChecklistItem objects that were frozen into this file.
+            let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
+            items = unarchiver.decodeObject(forKey: "ChecklistItems") as! [ChecklistItem]
+            unarchiver.finishDecoding()
+        }
     }
     
     override func viewDidLoad() {
