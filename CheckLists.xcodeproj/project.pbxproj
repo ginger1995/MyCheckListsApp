@@ -14,6 +14,7 @@
 		52A242661E1F72D8004C5631 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52A242641E1F72D8004C5631 /* Main.storyboard */; };
 		52A242681E1F72D8004C5631 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52A242671E1F72D8004C5631 /* Assets.xcassets */; };
 		52A2426B1E1F72D8004C5631 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52A242691E1F72D8004C5631 /* LaunchScreen.storyboard */; };
+		52F0DE2F1E2C796B00DC9F1D /* AllListsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F0DE2E1E2C796B00DC9F1D /* AllListsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		52A242671E1F72D8004C5631 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		52A2426A1E1F72D8004C5631 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		52A2426C1E1F72D8004C5631 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52F0DE2E1E2C796B00DC9F1D /* AllListsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllListsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				52A2426C1E1F72D8004C5631 /* Info.plist */,
 				521612DC1E24934A0035ABA6 /* ChecklistItem.swift */,
 				521612DE1E24EC6E0035ABA6 /* ItemDetailViewController.swift */,
+				52F0DE2E1E2C796B00DC9F1D /* AllListsViewController.swift */,
 			);
 			path = CheckLists;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 				52A242631E1F72D8004C5631 /* ChecklistViewController.swift in Sources */,
 				521612DF1E24EC6E0035ABA6 /* ItemDetailViewController.swift in Sources */,
 				521612DD1E24934A0035ABA6 /* ChecklistItem.swift in Sources */,
+				52F0DE2F1E2C796B00DC9F1D /* AllListsViewController.swift in Sources */,
 				52A242611E1F72D8004C5631 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
