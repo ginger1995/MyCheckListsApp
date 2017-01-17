@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AllListsViewController: UITableViewController {
+class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate {
     
     var lists: [Checklist] //等价于 var lists: Array<Checklist>
     
@@ -67,9 +67,43 @@ class AllListsViewController: UITableViewController {
         if segue.identifier == "ShowChecklist" {
             let controller = segue.destination as! ChecklistViewController
             controller.checklist = sender as! Checklist
+        } else if segue.identifier == "AddChecklist" {
+            let navigationController = segue.destination as! UINavigationController
+            let controller = navigationController.topViewController as! ListDetailViewController
+            controller.delegate = self
+            controller.checklistToEdit = nil
         }
     }
     
+    func listDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func listDetailViewController(_ controller: ListDetailViewController, didFinishAdding checklist: Checklist){
+        let newRowIndex = lists.count
+        lists.append(checklist)
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func listDetailViewController(_ controller: ListDetailViewController, didFinishEditing checklist: Checklist) {
+        if let index = lists.index(of: checklist) {
+            let indexPath = IndexPath(row: index, section: 0)
+            if let cell = tableView.cellForRow(at: indexPath) {
+                cell.textLabel!.text = checklist.name
+            }
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    //右划删除
+    override func tableView(_ tableView: UITableView,commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        lists.remove(at: indexPath.row)
+        let indexPaths = [indexPath]
+        tableView.deleteRows(at: indexPaths, with: .automatic)
+    }
+
     func makeCell(for tableView: UITableView) -> UITableViewCell {
         let cellIdentifier = "Cell"
         if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) {
