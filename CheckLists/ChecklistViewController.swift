@@ -11,6 +11,8 @@ import UIKit
 class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDelegate{
     
     var items :[ChecklistItem]
+    //【!】is similar to optionals with a question mark, but you don’t have to write if let to unwrap it.
+    var checklist: Checklist!
     
     //This initial method is for view controllers that are automatically loaded from a storyboard
     required init?(coder aDecoder: NSCoder) {
@@ -36,6 +38,7 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        title = checklist.name
     }
     
     override func didReceiveMemoryWarning() {

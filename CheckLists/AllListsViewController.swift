@@ -10,6 +10,31 @@ import UIKit
 
 class AllListsViewController: UITableViewController {
     
+    var lists: [Checklist] //等价于 var lists: Array<Checklist>
+    
+    //This initial method is for view controllers that are automatically loaded from a storyboard
+    required init?(coder aDecoder: NSCoder) {
+        // 1
+        lists = [Checklist]()
+        
+        // 2
+        super.init(coder: aDecoder)
+        
+        // 3
+        var list = Checklist(name: "Birthdays")
+        lists.append(list)
+        
+        list = Checklist(name: "Groceries")
+        lists.append(list)
+        
+        list = Checklist(name: "Cool Apps")
+        lists.append(list)
+        
+        list = Checklist(name: "To Do")
+        lists.append(list)
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -20,16 +45,29 @@ class AllListsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return lists.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = makeCell(for: tableView)
-        cell.textLabel!.text = "List \(indexPath.row)"
+        let checklist = lists[indexPath.row]
+        cell.textLabel!.text = checklist.name
+        cell.accessoryType = .detailDisclosureButton
+        
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) { performSegue(withIdentifier: "ShowChecklist", sender: nil)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let checklist = lists[indexPath.row]
+        //use 【sender】 parameter to send along the Checklist object from the row that the user tapped on.
+        performSegue(withIdentifier: "ShowChecklist", sender: checklist)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowChecklist" {
+            let controller = segue.destination as! ChecklistViewController
+            controller.checklist = sender as! Checklist
+        }
     }
     
     func makeCell(for tableView: UITableView) -> UITableViewCell {
