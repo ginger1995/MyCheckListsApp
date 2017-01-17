@@ -103,6 +103,16 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
     }
+    
+    //点击每行的i按钮
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let navigationController = storyboard!.instantiateViewController(withIdentifier: "ListDetailNavigationController") as! UINavigationController
+        let controller = navigationController.topViewController as! ListDetailViewController
+        controller.delegate = self
+        let checklist = lists[indexPath.row]
+        controller.checklistToEdit = checklist
+        present(navigationController, animated: true, completion: nil)
+    }
 
     func makeCell(for tableView: UITableView) -> UITableViewCell {
         let cellIdentifier = "Cell"
