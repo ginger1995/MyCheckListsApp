@@ -71,7 +71,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             let navigationController = segue.destination as! UINavigationController
             let controller = navigationController.topViewController as! ListDetailViewController
             controller.delegate = self
-            controller.checklistToEdit = nil
+            //controller.checklistToEdit = nil
         }
     }
     
