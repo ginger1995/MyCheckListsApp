@@ -10,30 +10,18 @@ import UIKit
 
 class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDelegate{
     
-    var items :[ChecklistItem]
     //【!】is similar to optionals with a question mark, but you don’t have to write if let to unwrap it.
     var checklist: Checklist!
     
     //This initial method is for view controllers that are automatically loaded from a storyboard
-    required init?(coder aDecoder: NSCoder) {
-        //make sure all instance variable items has a proper value
-        items = [ChecklistItem]()
-        
-        super.init(coder: aDecoder)
-        
-        loadChecklistItems()
-    }
-    //do the work of loading the .plist file.
-    func loadChecklistItems() {
-        let path = dataFilePath()
-        //Try to load the contents of Checklists.plist into a new Data object.
-        if let data = try? Data(contentsOf :path) {
-            //create an NSKeyedUnarchiver object (note: this is an unarchiver) and ask it to decode that data into the items array. This populates the array with exact copies of the ChecklistItem objects that were frozen into this file.
-            let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
-            items = unarchiver.decodeObject(forKey: "ChecklistItems") as! [ChecklistItem]
-            unarchiver.finishDecoding()
-        }
-    }
+//    required init?(coder aDecoder: NSCoder) {
+//        //make sure all instance variable items has a proper value
+//        items = [ChecklistItem]()
+//        
+//        super.init(coder: aDecoder)
+//        
+//        loadChecklistItems()
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,14 +35,14 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
     }
     //覆盖UItableViewDatasource protocol中的方法：方法返回tableview的总行数
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return checklist.items.count
     }
     //覆盖UItableViewDatasource protocol中的方法：方法为索引指定的行返回一个cell，通过该方法为所有的行添加cell（数据）
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //gets a copy of the prototype cell – either a new one or a recycled one – and puts it into the local constant
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
         
-        let item = items[indexPath.row]
+        let item = checklist.items[indexPath.row]
         configureText(for:cell, with:item)
         configureCheckmark(for:cell, with:item)
         return cell
@@ -63,22 +51,22 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let cell = tableView.cellForRow(at: indexPath) {
-            let item = items[indexPath.row]
+            let item = checklist.items[indexPath.row]
             item.toggleChecked()
             configureCheckmark(for:cell, with:item)
         }
         tableView.deselectRow(at: indexPath, animated: true)
-        saveChecklistItems()
+        //saveChecklistItems()
     }
     
     //覆盖UItableViewDatasource protocol中的方法：Asks the data source to commit the insertion or deletion of a specified row in the receiver.(右划item删除项目)
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         //1.remove the item from the data model
-        items.remove(at: indexPath.row)
+        checklist.items.remove(at: indexPath.row)
         //2.delete the corresponding row from the table view
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
-        saveChecklistItems()
+        //saveChecklistItems()
     }
     
     //prepare-for-segue allows you to give data to the new view controller before it will be displayed.(为页面跳转做准备)
@@ -97,7 +85,7 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
             
             if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
                 //给ItemDetailViewController类的itemToEdit变量传值
-                controller.itemToEdit = items[indexPath.row]
+                controller.itemToEdit = checklist.items[indexPath.row]
             }
         }
     }
@@ -108,26 +96,26 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
     }
     //ItemDetailViewControllerDelegate 点击AddItem界面的navigationController的Done按钮的行为(添加新的Item)
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem) {
-        let newRowIndex = items.count
-        items.append(item)
+        let newRowIndex = checklist.items.count
+        checklist.items.append(item)
         
         let indexPath = IndexPath(row: newRowIndex, section: 0)
         let indexPaths = [indexPath]
         tableView.insertRows(at: indexPaths, with: .automatic)
         
         dismiss(animated: true, completion: nil)
-        saveChecklistItems()
+        //saveChecklistItems()
     }
     //ItemDetailViewControllerDelegate 点击AddItem界面的navigationController的Done按钮的行为(修改现有的Item)
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
-        if let index = items.index(of: item) {
+        if let index = checklist.items.index(of:item) {
             let indexPath = IndexPath(row: index, section: 0)
             if let cell = tableView.cellForRow(at: indexPath) {
                 configureText(for: cell, with: item)
             }
         }
         dismiss(animated: true, completion: nil)
-        saveChecklistItems()
+        //saveChecklistItems()
     }
     //配置cell上的✅
     func configureCheckmark(for cell:UITableViewCell, with item:ChecklistItem) {
@@ -143,23 +131,5 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
     func configureText(for cell:UITableViewCell, with item:ChecklistItem) {
         let label = cell.viewWithTag(1000) as! UILabel
         label.text = item.text
-    }
-    //get the full path to the Documents folder.
-    func documentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
-    }
-    //construct the full path to the file that will store the checklist items.
-    func dataFilePath() -> URL {
-        return documentsDirectory().appendingPathComponent("Checklists.plist")
-    }
-    //call this saveChecklistItems() method whenever the list of items is modified.
-    func saveChecklistItems() {
-        let data = NSMutableData()
-        let archiver = NSKeyedArchiver(forWritingWith: data)
-        
-        archiver.encode(items, forKey: "ChecklistItems")
-        archiver.finishEncoding()
-        data.write(to: dataFilePath(), atomically: true)
     }
 }
