@@ -8,12 +8,24 @@
 
 import UIKit
 
-class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate {
+class AllListsViewController: UITableViewController, ListDetailViewControllerDelegate, UINavigationControllerDelegate {
     
     var dataModel: DataModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    //UIKit automatically calls this method after the view controller has become visible.
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        navigationController?.delegate = self
+        
+        let index = dataModel.indexOfSelectedChecklist
+        if index >= 0 && index < dataModel.lists.count {
+            let checklist = dataModel.lists[index]
+            performSegue(withIdentifier: "ShowChecklist", sender: checklist)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -35,6 +47,9 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //store the index of the selected row into UserDefaults
+        dataModel.indexOfSelectedChecklist = indexPath.row
+        
         let checklist = dataModel.lists[indexPath.row]
         //use 【sender】 parameter to send along the Checklist object from the row that the user tapped on.
         performSegue(withIdentifier: "ShowChecklist", sender: checklist)
@@ -89,6 +104,13 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         let checklist = dataModel.lists[indexPath.row]
         controller.checklistToEdit = checklist
         present(navigationController, animated: true, completion: nil)
+    }
+    //This method is called whenever the navigation controller will slide to a new screen.
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        // Was the back button tapped?
+        if viewController === self {
+            dataModel.indexOfSelectedChecklist = -1
+        }
     }
     
     func makeCell(for tableView: UITableView) -> UITableViewCell {

@@ -7,12 +7,39 @@
 //
 
 import Foundation
-
+//本类专一负责文件的存储与读取（工具类）
 class DataModel {
     var lists = [Checklist]()
+    var indexOfSelectedChecklist: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "ChecklistIndex")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "ChecklistIndex")
+        }
+    }
     
     init() {
         loadChecklists()
+        registerDefaults()
+        handleFirstTime()
+    }
+    //UserDefaults will use the values from this dictionary if you ask it for a key but it cannot find anything under that key.
+    func registerDefaults() {
+        let dictionary: [String: Any] = [ "ChecklistIndex": -1, "FirstTime": true ]
+        UserDefaults.standard.register(defaults: dictionary)
+    }
+    
+    func handleFirstTime() {
+        let isFirstTime = UserDefaults.standard.bool(forKey: "FirstTime")
+        if isFirstTime {
+            let checklist = Checklist(name: "ExampleList")
+            lists.append(checklist)
+            
+            indexOfSelectedChecklist = 0
+            UserDefaults.standard.set(false, forKey: "FirstTime")
+            UserDefaults.standard.synchronize()
+        }
     }
     
     //get the full path to the Documents folder.
