@@ -15,7 +15,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    //UIKit automatically calls this method after the view controller has become visible.
+    //UIKit automatically calls this after the view is visible on the screen and the animation has completed.
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -26,6 +26,11 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             let checklist = dataModel.lists[index]
             performSegue(withIdentifier: "ShowChecklist", sender: checklist)
         }
+    }
+    //called when the view is about to become visible but the animation hasn’t started yet.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
     
     override func didReceiveMemoryWarning() {
@@ -43,6 +48,14 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         cell.textLabel!.text = checklist.name
         cell.accessoryType = .detailDisclosureButton
         
+        let count = checklist.countUncheckedItems()
+        if checklist.items.count == 0 {
+            cell.detailTextLabel!.text = "No Items!"
+        } else if count == 0 {
+            cell.detailTextLabel!.text = "All Done!"
+        } else {
+            cell.detailTextLabel!.text = "\(count) Remaining"
+        }
         return cell
     }
     
@@ -118,7 +131,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) {
             return cell
         } else {
-            return UITableViewCell(style: .default, reuseIdentifier: cellIdentifier)
+            return UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
         }
     }
 }

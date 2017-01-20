@@ -28,4 +28,12 @@ class Checklist: NSObject, NSCoding {
         self.name = name
         super.init()
     }
+    //计算CheckList中未完成的ChecklistItem数
+    func countUncheckedItems() -> Int {
+        var count = 0
+        for item in items where !item.checked {
+            count += 1
+        }
+        return count
+    }
 }
