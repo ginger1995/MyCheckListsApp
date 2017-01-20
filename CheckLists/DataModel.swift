@@ -41,6 +41,13 @@ class DataModel {
             UserDefaults.standard.synchronize()
         }
     }
+    //sort
+    func sortChecklists() {
+        //lists.sort(by: {checklist1,checklist2 in return checklist1.name.localizedStandardCompare(checklist2.name) == .orderedAscending})
+        lists.sort(by: {
+            checklist1,checklist2 in checklist1.name.lowercased() < checklist2.name.lowercased()
+        })
+    }
     
     //get the full path to the Documents folder.
     func documentsDirectory() -> URL {
@@ -71,6 +78,7 @@ class DataModel {
             let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
             lists = unarchiver.decodeObject(forKey: "Checklists") as! [Checklist]
             unarchiver.finishDecoding()
+            sortChecklists()
         }
     }
     

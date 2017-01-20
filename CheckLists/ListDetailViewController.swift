@@ -14,12 +14,14 @@ protocol ListDetailViewControllerDelegate: class {
     func listDetailViewController(_ controller: ListDetailViewController, didFinishEditing checklist: Checklist)
 }
 
-class ListDetailViewController: UITableViewController, UITextFieldDelegate {
+class ListDetailViewController: UITableViewController, UITextFieldDelegate, IconPickerViewControllerDelegate {
     
+    @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     weak var delegate: ListDetailViewControllerDelegate?
     var checklistToEdit: Checklist?
+    var iconName = "Folder"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,12 +30,29 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
             title = "Edit Checklist"
             textField.text = checklist.name
             doneBarButton.isEnabled = true
+            iconName = checklist.iconName
         }
+        iconImageView.image = UIImage(named: iconName)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         textField.becomeFirstResponder()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "PickIcon" {
+            let controller = segue.destination as! IconPickerViewController
+            controller.delegate = self
+        }
+    }
+    
+    func iconPicker(_ picker: IconPickerViewController, didPick iconName: String) {
+        self.iconName = iconName
+        iconImageView.image = UIImage(named: iconName)
+        //关掉图标选择界面，此处不用dismiss而用pop方法是因为When creating the segue you used the segue style “show” instead of “present modally”. (dismiss() is for modal screens only, not for push screens.)
+        //By writing let _ = you tell Xcode you don’t care about the return value from popViewController()
+        let _ = navigationController?.popViewController(animated: true)
     }
     
     @IBAction func cancel() {
@@ -43,9 +62,12 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func done() {
         if let checklist = checklistToEdit {
             checklist.name = textField.text!
+            checklist.iconName = iconName
             delegate?.listDetailViewController(self, didFinishEditing: checklist)
+            //else即为新添加的checklist而非修改
         } else {
             let checklist = Checklist(name: textField.text!)
+            checklist.iconName = iconName
             delegate?.listDetailViewController(self, didFinishAdding: checklist)
         }
     }
@@ -57,9 +79,13 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate {
         return true
     }
     
-    //user cannot select the table cell with the text field
+    //user cannot select the table cell of section 0 but section 1
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
+        if indexPath.section == 1 {
+            return indexPath
+        } else {
+            return nil
+        }
     }
 
     override func didReceiveMemoryWarning() {
