@@ -46,7 +46,7 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
             controller.delegate = self
         }
     }
-    
+    //IconPickerViewControllerDelegate
     func iconPicker(_ picker: IconPickerViewController, didPick iconName: String) {
         self.iconName = iconName
         iconImageView.image = UIImage(named: iconName)
@@ -60,14 +60,13 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
     }
     
     @IBAction func done() {
+        //如果checklistToEdit不为nil，则说明此时是edit而非add new checklist
         if let checklist = checklistToEdit {
             checklist.name = textField.text!
             checklist.iconName = iconName
             delegate?.listDetailViewController(self, didFinishEditing: checklist)
-            //else即为新添加的checklist而非修改
-        } else {
-            let checklist = Checklist(name: textField.text!)
-            checklist.iconName = iconName
+        } else { //else即为新添加的checklist而非修改
+            let checklist = Checklist(name: textField.text!,iconName: iconName)
             delegate?.listDetailViewController(self, didFinishAdding: checklist)
         }
     }

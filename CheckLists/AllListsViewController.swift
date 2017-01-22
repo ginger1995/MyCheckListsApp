@@ -80,18 +80,18 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             //controller.checklistToEdit = nil
         }
     }
-    
+    //ListDetailViewControllerDelegate
     func listDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
         dismiss(animated: true, completion: nil)
     }
-    
+    //ListDetailViewControllerDelegate
     func listDetailViewController(_ controller: ListDetailViewController, didFinishAdding checklist: Checklist){
         dataModel.lists.append(checklist)
         dataModel.sortChecklists()
         tableView.reloadData()
         dismiss(animated: true, completion: nil)
     }
-    
+    //ListDetailViewControllerDelegate
     func listDetailViewController(_ controller: ListDetailViewController, didFinishEditing checklist: Checklist) {
         dataModel.sortChecklists()
         tableView.reloadData()
@@ -120,12 +120,13 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
             dataModel.indexOfSelectedChecklist = -1
         }
     }
-    
+    //新建cell
     func makeCell(for tableView: UITableView) -> UITableViewCell {
         let cellIdentifier = "Cell"
         if let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) {
             return cell
         } else {
+            //系统自带的 .subtitle样式的cell，自带一个主text下方的副标题小text和cell最左侧的一个小icon
             return UITableViewCell(style: .subtitle, reuseIdentifier: cellIdentifier)
         }
     }

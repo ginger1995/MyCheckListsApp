@@ -43,11 +43,8 @@ class ItemDetailViewController: UITableViewController ,UITextFieldDelegate {
             
             delegate?.itemDetailViewController(self, didFinishEditing: item)
         } else {
-        let item = ChecklistItem()
-        item.text = textField.text!
-        item.checked = false
-        
-        delegate?.itemDetailViewController(self, didFinishAdding: item)
+            let item = ChecklistItem(text: textField.text!)
+            delegate?.itemDetailViewController(self, didFinishAdding: item)
         }
     }
     //UITableViewDelegate协议的方法：使textfield所在行处于不可被选中的状态

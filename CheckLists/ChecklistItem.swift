@@ -16,8 +16,14 @@ class ChecklistItem: NSObject ,NSCoding {
     var text = ""
     var checked = false
     
-    override init() {
+    init(text: String, checked: Bool) {
+        self.text = text
+        self.checked = checked
         super.init()
+    }
+    
+    convenience init(text: String) {
+        self.init(text: text, checked: false)
     }
     
     //When NSKeyedArchiver tries to encode the ChecklistItem object it will send the checklist item an encode(with) message.
