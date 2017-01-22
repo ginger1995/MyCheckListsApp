@@ -18,7 +18,6 @@
 		52A242631E1F72D8004C5631 /* ChecklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A242621E1F72D8004C5631 /* ChecklistViewController.swift */; };
 		52A242661E1F72D8004C5631 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52A242641E1F72D8004C5631 /* Main.storyboard */; };
 		52A242681E1F72D8004C5631 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52A242671E1F72D8004C5631 /* Assets.xcassets */; };
-		52A2426B1E1F72D8004C5631 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52A242691E1F72D8004C5631 /* LaunchScreen.storyboard */; };
 		52F0DE2F1E2C796B00DC9F1D /* AllListsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52F0DE2E1E2C796B00DC9F1D /* AllListsViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +33,6 @@
 		52A242621E1F72D8004C5631 /* ChecklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ChecklistViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		52A242651E1F72D8004C5631 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		52A242671E1F72D8004C5631 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		52A2426A1E1F72D8004C5631 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		52A2426C1E1F72D8004C5631 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52F0DE2E1E2C796B00DC9F1D /* AllListsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllListsViewController.swift; sourceTree = "<group>"; };
 		A9A8E285DAB5F1DBDBAE7946 /* Pods-CheckLists.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CheckLists.release.xcconfig"; path = "Pods/Target Support Files/Pods-CheckLists/Pods-CheckLists.release.xcconfig"; sourceTree = "<group>"; };
@@ -102,7 +100,6 @@
 				52A242601E1F72D8004C5631 /* AppDelegate.swift */,
 				52A242641E1F72D8004C5631 /* Main.storyboard */,
 				52A242671E1F72D8004C5631 /* Assets.xcassets */,
-				52A242691E1F72D8004C5631 /* LaunchScreen.storyboard */,
 				52A2426C1E1F72D8004C5631 /* Info.plist */,
 			);
 			path = CheckLists;
@@ -160,7 +157,7 @@
 				TargetAttributes = {
 					52A2425C1E1F72D8004C5631 = {
 						CreatedOnToolsVersion = 8.2;
-						DevelopmentTeam = NQQ68JVY92;
+						DevelopmentTeam = L3HV5LK5JW;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -188,7 +185,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52A2426B1E1F72D8004C5631 /* LaunchScreen.storyboard in Resources */,
 				52A242681E1F72D8004C5631 /* Assets.xcassets in Resources */,
 				52A242661E1F72D8004C5631 /* Main.storyboard in Resources */,
 			);
@@ -270,14 +266,6 @@
 				52A242651E1F72D8004C5631 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		52A242691E1F72D8004C5631 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				52A2426A1E1F72D8004C5631 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -380,7 +368,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = NQQ68JVY92;
+				DEVELOPMENT_TEAM = L3HV5LK5JW;
 				INFOPLIST_FILE = CheckLists/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -397,7 +385,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = NQQ68JVY92;
+				DEVELOPMENT_TEAM = L3HV5LK5JW;
 				INFOPLIST_FILE = CheckLists/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

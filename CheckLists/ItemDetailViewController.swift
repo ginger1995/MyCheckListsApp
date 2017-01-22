@@ -65,19 +65,3 @@ class ItemDetailViewController: UITableViewController ,UITextFieldDelegate {
         return true
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
