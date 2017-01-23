@@ -26,10 +26,20 @@ class DataModel {
     }
     //UserDefaults will use the values from this dictionary if you ask it for a key but it cannot find anything under that key.
     func registerDefaults() {
-        let dictionary: [String: Any] = [ "ChecklistIndex": -1, "FirstTime": true ]
+        let dictionary: [String: Any] = [ "ChecklistIndex": -1, "FirstTime": true, "ChecklistItemID": 0 ]
         UserDefaults.standard.register(defaults: dictionary)
     }
+    //
+    class func nextChecklistItemID() -> Int {
+        let userDefaults = UserDefaults.standard
+        let itemID = userDefaults.integer(forKey: "ChecklistItemID")
+        userDefaults.set(itemID + 1, forKey: "ChecklistItemID")
+        //userDefaults.synchronize() to force UserDefaults to write these changes to disk immediately
+        userDefaults.synchronize()
+        return itemID
+    }
     
+    //首次登录的处理
     func handleFirstTime() {
         let isFirstTime = UserDefaults.standard.bool(forKey: "FirstTime")
         if isFirstTime {

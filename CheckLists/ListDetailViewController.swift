@@ -19,6 +19,7 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
+    
     weak var delegate: ListDetailViewControllerDelegate?
     var checklistToEdit: Checklist?
     var iconName = "Folder"

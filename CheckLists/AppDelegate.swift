@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
     //实例化DataModel类的对象
@@ -24,7 +25,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = window!.rootViewController as! UINavigationController
         let controller = navigationController.viewControllers[0] as! AllListsViewController
         controller.dataModel = dataModel
+        //iOS 10 new feather: configure local notification（first ask for the user's permission）
+        let center = UNUserNotificationCenter.current()
+//        center.requestAuthorization(options: [.alert,.sound]){
+//            granted, error in
+//            if granted {
+//                print("We have permission")
+//            } else {
+//                print("Permission denied")
+//            }
+//        }
+        //tell the UNUserNotificationCenter that AppDelegate is now its delegate.
+        center.delegate = self
+        //make a man-made notification
+//        let content = UNMutableNotificationContent()
+//        content.title = "Hello!"
+//        content.body = "I am a local notification"
+//        content.sound = UNNotificationSound.default()
+//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 7, repeats: false)
+//        let request = UNNotificationRequest(identifier: "MyNotification", content: content, trigger: trigger)
+//        center.add(request)
+        
         return true
+    }
+    
+    // MARK: UNUserNotificationCenterDelegate
+    //This method will be invoked when the local notification is posted and the app is still running.
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        print("Received local notification \(notification)")
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -50,7 +78,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         saveData()
     }
-
-
 }
-

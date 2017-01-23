@@ -13,6 +13,7 @@ class Checklist: NSObject, NSCoding {
     var name = ""
     var items = [ChecklistItem]()
     var iconName: String
+    
     //for loading the objects from the plist file
     required init?(coder aDecoder: NSCoder) {
         name = aDecoder.decodeObject(forKey: "Name") as! String
@@ -36,6 +37,7 @@ class Checklist: NSObject, NSCoding {
     convenience init(name: String) {
         self.init(name: name, iconName: "No Icon")
     }
+    
     //计算CheckList中未完成的ChecklistItem数
     func countUncheckedItems() -> Int {
         var count = 0
