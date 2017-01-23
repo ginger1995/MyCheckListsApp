@@ -52,9 +52,37 @@ class ItemDetailViewController: UITableViewController ,UITextFieldDelegate {
     //showDatePicker
     func showDatePicker() {
         datePickerVisible = true
-        
+        let indexPathDateRow = IndexPath(row: 1, section: 1)
         let indexPathDatePicker = IndexPath(row: 2, section: 1)
+        
+        if let dateCell = tableView.cellForRow(at: indexPathDateRow) {
+            dateCell.detailTextLabel!.textColor = dateCell.detailTextLabel!.tintColor
+        }
+        //doing two operations on the table view at the same time – inserting a new row and reloading another – you need to put this in between calls to beginUpdates() and endUpdates()
+        tableView.beginUpdates()
         tableView.insertRows(at: [indexPathDatePicker], with: .fade)
+        tableView.reloadRows(at: [indexPathDateRow], with: .none)
+        tableView.endUpdates()
+        
+        datePicker.setDate(dueDate, animated: false)
+    }
+    
+    //hideDatePicker
+    func hideDatePicker() {
+        if datePickerVisible {
+            datePickerVisible = false
+            let indexPathDateRow = IndexPath(row: 1, section: 1)
+            let indexPathDatePicker = IndexPath(row: 2, section: 1)
+            
+            if let cell = tableView.cellForRow(at: indexPathDateRow) {
+                cell.detailTextLabel!.textColor = UIColor(white: 0, alpha: 0.5)
+            }
+            
+            tableView.beginUpdates()
+            tableView.reloadRows(at: [indexPathDateRow], with: .none)
+            tableView.deleteRows(at: [indexPathDatePicker], with: .fade)
+            tableView.endUpdates()
+        }
     }
     
     @IBAction func dateChanged(_ datePicker: UIDatePicker) {
@@ -105,7 +133,11 @@ class ItemDetailViewController: UITableViewController ,UITextFieldDelegate {
         textField.resignFirstResponder()
         
         if indexPath.section == 1 && indexPath.row == 1 {
-            showDatePicker()
+            if !datePickerVisible {
+                showDatePicker()
+            } else {
+                hideDatePicker()
+            }
         }
     }
     
@@ -149,5 +181,10 @@ class ItemDetailViewController: UITableViewController ,UITextFieldDelegate {
         
         doneBarButton.isEnabled = (newText.length > 0)
         return true
+    }
+    
+    //键盘弹出的时候隐藏DatePicker
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        hideDatePicker()
     }
 }
