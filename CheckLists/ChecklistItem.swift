@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UserNotifications
 
 //继承了NSObject使之成为equitable的object（可做==运算，可通过index(of)方法求索引）
 //遵从了NSCoding protocol to use the NSCoder system on an object
@@ -51,5 +52,40 @@ class ChecklistItem: NSObject ,NSCoding {
     //改变 √ 的状态
     func toggleChecked() {
         checked = !checked
+    }
+    
+    //为每个ChecklistItem计划通知
+    func scheduleNotification() {
+        //每次设置新的Notification时先移除旧的
+        removeNotification()
+        
+        if shouldRemind && (dueDate > Date()) {
+            //1
+            let content = UNMutableNotificationContent()
+            content.title = "Reminder:"
+            content.body = text
+            content.sound = UNNotificationSound.default()
+            //2
+            let calendar = Calendar(identifier: .gregorian)
+            let components = calendar.dateComponents([.month,.day,.hour,.minute], from: dueDate)
+            //3
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+            //4
+            let request = UNNotificationRequest(identifier: "\(itemID)", content: content, trigger: trigger)
+            //5
+            let center = UNUserNotificationCenter.current()
+            center.add(request)
+            
+            print("Scheduled notification \(request) for itemID \(itemID)")
+        }
+    }
+    //removeNotification
+    func removeNotification() {
+        let center = UNUserNotificationCenter.current()
+        center.removePendingNotificationRequests(withIdentifiers: ["\(itemID)"])
+    }
+    //will be invoked when you delete an individual ChecklistItem but also when you delete a whole Checklist – because all its ChecklistItems will be destroyed as well
+    deinit {
+        removeNotification()
     }
 }

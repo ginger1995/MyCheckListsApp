@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import UserNotifications
 
 protocol ItemDetailViewControllerDelegate: class {
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
@@ -85,6 +86,17 @@ class ItemDetailViewController: UITableViewController ,UITextFieldDelegate {
         }
     }
     
+    @IBAction func shouldRemindToggled(_ switchControl: UISwitch) {
+        textField.resignFirstResponder()
+        
+        if switchControl.isOn {
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.alert,.sound]) {
+                granted, error in /*do nothing*/
+            }
+        }
+    }
+    
     @IBAction func dateChanged(_ datePicker: UIDatePicker) {
         dueDate = datePicker.date
         updateDueDateLabel()
@@ -100,11 +112,15 @@ class ItemDetailViewController: UITableViewController ,UITextFieldDelegate {
             item.text = textField.text!
             item.shouldRemind = shouldRemindSwitch.isOn
             item.dueDate = dueDate
+            //每次点完done按钮后重新scheduleNotification
+            item.scheduleNotification()
             delegate?.itemDetailViewController(self, didFinishEditing: item)
         } else {
             let item = ChecklistItem(text: textField.text!)
             item.shouldRemind = shouldRemindSwitch.isOn
             item.dueDate = dueDate
+            //每次点完done按钮后重新scheduleNotification
+            item.scheduleNotification()
             delegate?.itemDetailViewController(self, didFinishAdding: item)
         }
     }
@@ -131,7 +147,7 @@ class ItemDetailViewController: UITableViewController ,UITextFieldDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         textField.resignFirstResponder()
-        
+        //如果DatePicker已经显示，则再次点击使其消失
         if indexPath.section == 1 && indexPath.row == 1 {
             if !datePickerVisible {
                 showDatePicker()
