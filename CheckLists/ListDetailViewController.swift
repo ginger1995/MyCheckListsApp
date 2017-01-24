@@ -38,6 +38,7 @@ class ListDetailViewController: UITableViewController, UITextFieldDelegate, Icon
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        //打开本Viewcontroller后立即弹出键盘
         textField.becomeFirstResponder()
     }
     

@@ -20,7 +20,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
         super.viewDidAppear(animated)
         
         navigationController?.delegate = self
-        
+        //自动跳转到上次打开的checklistViewController
         let index = dataModel.indexOfSelectedChecklist
         if index >= 0 && index < dataModel.lists.count {
             let checklist = dataModel.lists[index]
@@ -61,7 +61,7 @@ class AllListsViewController: UITableViewController, ListDetailViewControllerDel
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //store the index of the selected row into UserDefaults
+        //first store the index of the selected row into UserDefaults
         dataModel.indexOfSelectedChecklist = indexPath.row
         
         let checklist = dataModel.lists[indexPath.row]

@@ -9,7 +9,9 @@
 import Foundation
 //本类专一负责文件的存储与读取（工具类）
 class DataModel {
+    
     var lists = [Checklist]()
+    
     var indexOfSelectedChecklist: Int {
         get {
             return UserDefaults.standard.integer(forKey: "ChecklistIndex")

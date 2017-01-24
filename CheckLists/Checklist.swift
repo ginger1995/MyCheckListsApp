@@ -46,4 +46,12 @@ class Checklist: NSObject, NSCoding {
         }
         return count
     }
+    
+    //sort items in a checklist
+    func sortChecklists() {
+        //lists.sort(by: {checklist1,checklist2 in return checklist1.name.localizedStandardCompare(checklist2.name) == .orderedAscending})
+        items.sort(by: {
+            checklistitem1,checklistitem2 in checklistitem1.dueDate < checklistitem2.dueDate
+        })
+    }
 }

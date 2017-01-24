@@ -29,6 +29,11 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
         title = checklist.name
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -94,29 +99,35 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         dismiss(animated: true, completion: nil)
     }
+    
     //ItemDetailViewControllerDelegate 点击AddItem界面的navigationController的Done按钮的行为(添加新的Item)
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAdding item: ChecklistItem) {
-        let newRowIndex = checklist.items.count
+        //let newRowIndex = checklist.items.count
         checklist.items.append(item)
         
-        let indexPath = IndexPath(row: newRowIndex, section: 0)
-        let indexPaths = [indexPath]
-        tableView.insertRows(at: indexPaths, with: .automatic)
-        
+        //let indexPath = IndexPath(row: newRowIndex, section: 0)
+        //let indexPaths = [indexPath]
+        //tableView.insertRows(at: indexPaths, with: .automatic)
+        checklist.sortChecklists()
+        tableView.reloadData()
         dismiss(animated: true, completion: nil)
         //saveChecklistItems()
     }
+    
     //ItemDetailViewControllerDelegate 点击AddItem界面的navigationController的Done按钮的行为(修改现有的Item)
     func itemDetailViewController(_ controller: ItemDetailViewController, didFinishEditing item: ChecklistItem) {
-        if let index = checklist.items.index(of:item) {
-            let indexPath = IndexPath(row: index, section: 0)
-            if let cell = tableView.cellForRow(at: indexPath) {
-                configureText(for: cell, with: item)
-            }
-        }
+//        if let index = checklist.items.index(of:item) {
+//            let indexPath = IndexPath(row: index, section: 0)
+//            if let cell = tableView.cellForRow(at: indexPath) {
+//                configureText(for: cell, with: item)
+//            }
+//        }
+        checklist.sortChecklists()
+        tableView.reloadData()
         dismiss(animated: true, completion: nil)
         //saveChecklistItems()
     }
+    
     //配置cell上的✅
     func configureCheckmark(for cell:UITableViewCell, with item:ChecklistItem) {
         let label = cell.viewWithTag(1001) as! UILabel
@@ -127,9 +138,21 @@ class ChecklistViewController: UITableViewController ,ItemDetailViewControllerDe
             label.text = ""
         }
     }
+    
     //配置cell上的文字
     func configureText(for cell:UITableViewCell, with item:ChecklistItem) {
-        let label = cell.viewWithTag(1000) as! UILabel
-        label.text = item.text
+        let textlabel = cell.viewWithTag(1000) as! UILabel
+        let datelabel = cell.viewWithTag(1002) as! UILabel
+        //先显示item的名称text
+        textlabel.text = item.text
+        //再显示计划日期
+        if item.dueDate > Date() {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+            datelabel.text = "Due Date：" + formatter.string(from: item.dueDate)
+        } else {
+            datelabel.text = "expired item"
+        }
     }
 }
